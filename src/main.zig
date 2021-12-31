@@ -122,79 +122,104 @@ pub fn main() anyerror!void {
     gpio.writeOutset(0);
 
     const matrix = @import("hla").drivers.matrix;
-    
+
 
     var raw_matrix = matrix.RawMatrix(Pin, 3, 9){ .rows = .{ Pin{ .en_high = 13 }, Pin{ .en_high = 14 }, Pin{ .en_high = 15 } }, .cols = .{ Pin{ .en_low = 4 }, Pin{ .en_low = 5 }, Pin{ .en_low = 6 }, Pin{ .en_low = 7 }, Pin{ .en_low = 8 }, Pin{ .en_low = 9 }, Pin{ .en_low = 10 }, Pin{ .en_low = 11 }, Pin{ .en_low = 12 } }, .enabler = enablePin, .disabler = disablePin };
     var display = matrix.TransformedMatrix(Pin, 5, 5, 3, 9){ .map = .{ .{ .{ 0, 0 }, .{ 2, 3 }, .{ 1, 1 }, .{ 0, 7 }, .{ 2, 2 } }, .{ .{ 1, 3 }, .{ 2, 4 }, .{ 0, 8 }, .{ 0, 6 }, .{ 1, 6 } }, .{ .{ 0, 1 }, .{ 2, 5 }, .{ 1, 2 }, .{ 0, 5 }, .{ 2, 0 } }, .{ .{ 1, 4 }, .{ 2, 6 }, .{ 2, 8 }, .{ 0, 4 }, .{ 1, 5 } }, .{ .{ 0, 2 }, .{ 2, 7 }, .{ 1, 0 }, .{ 0, 3 }, .{ 2, 1 } } }, .raw_mat = raw_matrix };
 
-    var filling: bool = true;
-    var x: usize = 0;
-    var y: usize = 0;
+    //var filling: bool = true;
+    //var x: usize = 0;
+    //var y: usize = 0;
+
+    const font = @import("font.zig").data;
+    const str = "Happy New Year!";
+    var i: usize = 0;
     while (true) {
-        if (filling) {
-            display.enable(x, y);
-        } else {
-            display.disable(x, y);
-        }
-
-        var i: usize = 0;
-
-        while (i < 1000) {
-            display.raw_mat.disable_all();
-            i += 1;
-        }
-
-        if (y == 4 and x == 4) {
-            if (filling) {
-                display.raw_mat.enable_all();
-                i = 0;
-                while (i < 1000) {
-                    display.raw_mat.display_next_row();
-                    i += 1;
-                }
-                display.raw_mat.disable_all();
-                i = 0;
-                while (i < 1000) {
-                    display.raw_mat.display_next_row();
-                    i += 1;
-                }
-                display.raw_mat.enable_all();
-                i = 0;
-                while (i < 1000) {
-                    display.raw_mat.display_next_row();
-                    i += 1;
-                }
-                display.raw_mat.disable_all();
-            } else {
-                display.raw_mat.disable_all();
-                i = 0;
-                while (i < 1000) {
-                    display.raw_mat.display_next_row();
-                    i += 1;
-                }
-                display.raw_mat.enable_all();
-                i = 0;
-                while (i < 1000) {
-                    display.raw_mat.display_next_row();
-                    i += 1;
-                }
-                display.raw_mat.disable_all();
-                i = 0;
-                while (i < 1000) {
-                    display.raw_mat.display_next_row();
-                    i += 1;
-                }
-                display.raw_mat.enable_all();
+        for (str) |c| {
+            display.blit(font[c]);
+            var j: usize = 0;
+            while (j < 10000) {
+                j += 1;
+                display.raw_mat.display_next_row();
             }
-
-            filling = !filling;
-            x = 0;
-            y = 0;
-        } else if (x == 4) {
-            x = 0;
-            y += 1;
-        } else {
-            x += 1;
         }
     }
+    while(true) {
+        const buf: [5][5]bool = font[str[i]];
+        display.blit(buf);
+        var j: usize = 0;
+        while (j < 1000) {
+            display.raw_mat.display_next_row();
+            j += 1;
+        }
+        if (i == str.len) {i = 0;} else {i += 1;}
+    }
+
+    //while (true) {
+    //    if (filling) {
+    //        display.enable(x, y);
+    //    } else {
+    //        display.disable(x, y);
+    //    }
+//
+    //    var i: usize = 0;
+//
+    //    while (i < 1000) {
+    //        display.raw_mat.disable_all();
+    //        i += 1;
+    //    }
+//
+    //    if (y == 4 and x == 4) {
+    //        if (filling) {
+    //            display.raw_mat.enable_all();
+    //            i = 0;
+    //            while (i < 1000) {
+    //                display.raw_mat.display_next_row();
+    //                i += 1;
+    //            }
+    //            display.raw_mat.disable_all();
+    //            i = 0;
+    //            while (i < 1000) {
+    //                display.raw_mat.display_next_row();
+    //                i += 1;
+    //            }
+    //            display.raw_mat.enable_all();
+    //            i = 0;
+    //            while (i < 1000) {
+    //                display.raw_mat.display_next_row();
+    //                i += 1;
+    //            }
+    //            display.raw_mat.disable_all();
+    //        } else {
+    //            display.raw_mat.disable_all();
+    //            i = 0;
+    //            while (i < 1000) {
+    //                display.raw_mat.display_next_row();
+    //                i += 1;
+    //            }
+    //            display.raw_mat.enable_all();
+    //            i = 0;
+    //            while (i < 1000) {
+    //                display.raw_mat.display_next_row();
+    //                i += 1;
+    //            }
+    //            display.raw_mat.disable_all();
+    //            i = 0;
+    //            while (i < 1000) {
+    //                display.raw_mat.display_next_row();
+    //                i += 1;
+    //            }
+    //            display.raw_mat.enable_all();
+    //        }
+//
+    //        filling = !filling;
+    //        x = 0;
+    //        y = 0;
+    //    } else if (x == 4) {
+    //        x = 0;
+    //        y += 1;
+    //    } else {
+    //        x += 1;
+    //    }
+    //}
 }

@@ -1,6 +1,7 @@
 # Build directories and artifacts
 zig-out/
 zig-cache/
+src/nrf51/
 
 # User specific configuration
 debug-config.gdb

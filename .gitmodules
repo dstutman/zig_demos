@@ -2,5 +2,5 @@
 	path = extern/zig_hla
 	url = git@github.com:dstutman/zig_hla
 [submodule "extern/zig_rag"]
-	path = extern/zig_rag
+	path = extern/zig_ecg
 	url = git@github.com:dstutman/zig_rag

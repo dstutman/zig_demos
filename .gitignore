@@ -1,0 +1,12 @@
+# Build directories and artifacts
+zig-out/
+zig-cache/
+
+# User specific configuration
+debug-config.gdb
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# Miscellaneous directories
+test/

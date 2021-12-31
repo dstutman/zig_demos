@@ -1,6 +1,6 @@
 [submodule "extern/zig_hla"]
 	path = extern/zig_hla
 	url = git@github.com:dstutman/zig_hla
-[submodule "extern/zig_rag"]
+[submodule "extern/zig_ecg"]
 	path = extern/zig_ecg
-	url = git@github.com:dstutman/zig_rag
+	url = git@github.com:Dstutman/zig_ecg

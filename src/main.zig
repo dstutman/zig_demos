@@ -121,11 +121,11 @@ pub fn main() anyerror!void {
     gpio.writeDirset(1 << 4 | 1 << 5 | 1 << 6 | 1 << 7 | 1 << 8 | 1 << 9 | 1 << 10 | 1 << 11 | 1 << 12);
     gpio.writeOutset(0);
 
-    const RawMatrix = @import("drivers/matrix.zig").RawMatrix;
-    const TransformedMatrix = @import("drivers/matrix.zig").TransformedMatrix;
+    const matrix = @import("hla").drivers.matrix;
+    
 
-    var raw_matrix = RawMatrix(Pin, 3, 9){ .rows = .{ Pin{ .en_high = 13 }, Pin{ .en_high = 14 }, Pin{ .en_high = 15 } }, .cols = .{ Pin{ .en_low = 4 }, Pin{ .en_low = 5 }, Pin{ .en_low = 6 }, Pin{ .en_low = 7 }, Pin{ .en_low = 8 }, Pin{ .en_low = 9 }, Pin{ .en_low = 10 }, Pin{ .en_low = 11 }, Pin{ .en_low = 12 } }, .enabler = enablePin, .disabler = disablePin };
-    var display = TransformedMatrix(Pin, 5, 5, 3, 9){ .map = .{ .{ .{ 0, 0 }, .{ 2, 3 }, .{ 1, 1 }, .{ 0, 7 }, .{ 2, 2 } }, .{ .{ 1, 3 }, .{ 2, 4 }, .{ 0, 8 }, .{ 0, 6 }, .{ 1, 6 } }, .{ .{ 0, 1 }, .{ 2, 5 }, .{ 1, 2 }, .{ 0, 5 }, .{ 2, 0 } }, .{ .{ 1, 4 }, .{ 2, 6 }, .{ 2, 8 }, .{ 0, 4 }, .{ 1, 5 } }, .{ .{ 0, 2 }, .{ 2, 7 }, .{ 1, 0 }, .{ 0, 3 }, .{ 2, 1 } } }, .raw_mat = raw_matrix };
+    var raw_matrix = matrix.RawMatrix(Pin, 3, 9){ .rows = .{ Pin{ .en_high = 13 }, Pin{ .en_high = 14 }, Pin{ .en_high = 15 } }, .cols = .{ Pin{ .en_low = 4 }, Pin{ .en_low = 5 }, Pin{ .en_low = 6 }, Pin{ .en_low = 7 }, Pin{ .en_low = 8 }, Pin{ .en_low = 9 }, Pin{ .en_low = 10 }, Pin{ .en_low = 11 }, Pin{ .en_low = 12 } }, .enabler = enablePin, .disabler = disablePin };
+    var display = matrix.TransformedMatrix(Pin, 5, 5, 3, 9){ .map = .{ .{ .{ 0, 0 }, .{ 2, 3 }, .{ 1, 1 }, .{ 0, 7 }, .{ 2, 2 } }, .{ .{ 1, 3 }, .{ 2, 4 }, .{ 0, 8 }, .{ 0, 6 }, .{ 1, 6 } }, .{ .{ 0, 1 }, .{ 2, 5 }, .{ 1, 2 }, .{ 0, 5 }, .{ 2, 0 } }, .{ .{ 1, 4 }, .{ 2, 6 }, .{ 2, 8 }, .{ 0, 4 }, .{ 1, 5 } }, .{ .{ 0, 2 }, .{ 2, 7 }, .{ 1, 0 }, .{ 0, 3 }, .{ 2, 1 } } }, .raw_mat = raw_matrix };
 
     var filling: bool = true;
     var x: usize = 0;
@@ -140,7 +140,7 @@ pub fn main() anyerror!void {
         var i: usize = 0;
 
         while (i < 1000) {
-            display.raw_mat.disable_al();
+            display.raw_mat.disable_all();
             i += 1;
         }
 
@@ -155,7 +155,7 @@ pub fn main() anyerror!void {
                 display.raw_mat.disable_all();
                 i = 0;
                 while (i < 1000) {
-                    display.display_next_row();
+                    display.raw_mat.display_next_row();
                     i += 1;
                 }
                 display.raw_mat.enable_all();
@@ -172,7 +172,7 @@ pub fn main() anyerror!void {
                     display.raw_mat.display_next_row();
                     i += 1;
                 }
-                display.enable_all();
+                display.raw_mat.enable_all();
                 i = 0;
                 while (i < 1000) {
                     display.raw_mat.display_next_row();

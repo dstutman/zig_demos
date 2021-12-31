@@ -19,6 +19,7 @@ pub fn build(b: *std.build.Builder) void {
         .abi = .none,
     });
     exe.setBuildMode(mode);
+    exe.addPackagePath("hla", "extern/zig_hla/lib.zig");
     exe.setLinkerScriptPath(.{ .path = "nrf51_xxaa.ld" });
     //exe.addAssemblyFile("nrf5_sdk/modules/nrfx/mdk/gcc_startup_nrf51.S");
     //exe.addCSourceFile("nrf5_sdk/modules/nrfx/mdk/system_nrf51.c", &[_][]const u8{});
